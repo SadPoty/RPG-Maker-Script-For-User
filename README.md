@@ -4,7 +4,7 @@ This repository contains various scripts to enhance your RPG Maker MV/MZ and ACE
 
 ## Overview
 
-This collection of scripts aims to provide a range of useful tools and enhancements for RPG Maker users. From cheat codes to quality-of-life improvements, we've got you covered.
+This collection of scripts aims to provide a range of useful tools and enhancements for RPG Maker users. From cheat codes to quality-of-life improvements.
 
 ## Download
 

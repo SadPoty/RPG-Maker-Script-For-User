@@ -1,0 +1,15 @@
+# Cheat
+- Godmode
+- Get full health/mana
+- Gain stats (Atk, MaxHp, Gold...)
+- 
+
+# Enhance
+- Quick save / Quick load
+- Force open the save menu / load
+- Fast Forward text / combat (if game doesn't let you)
+- Zoom in/out
+
+
+# Other
+- Custom player model ?
