@@ -5,8 +5,8 @@
 - 
 
 # Enhance
-- Quick save / Quick load
-- Force open the save menu / load
+- Quick save / Quick load -> Done 05/02/2025
+- Force open the save menu / load -> Done 05/02/2025
 - Fast Forward text / combat (if game doesn't let you)
 - Zoom in/out
 

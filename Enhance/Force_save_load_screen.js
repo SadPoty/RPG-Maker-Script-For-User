@@ -1,0 +1,18 @@
+//==============================
+// * Put this code in a new file in the js/plugins directory
+// * Add the following to the list of plugins in js/plugins.js:
+// * {"name":"Force_save_load_screen","status":true,"description":"Add a keybind to force open the save or load screen","parameters":{}}
+// *
+// * You can find a list of keycodes here: https://www.toptal.com/developers/keycode
+// * By default, the keybind is set to I and O. You can change it by modifying the event.key === "i" and event.key === "o" variables.
+//==============================
+
+
+window.addEventListener("keydown", function(event) {  // Check if any key is pressed
+    if (event.key === "i") {
+        SceneManager.push(Scene_Save);
+    }
+    if (event.key === "o") {
+        SceneManager.push(Scene_Load);
+    }
+});
