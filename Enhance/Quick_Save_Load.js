@@ -1,4 +1,6 @@
-// {"description":"Let you quickly save and load", "usage":"F1 to save, F3 to load", "var":2}
+// {"description":"Let you quickly save and load", "usage":"F1 to save, F3 to load", "var":["F1", "F3"]}
+let keybind = ["F1", "F3"]; // Change keybind here
+// The commented line above is for the auto installer ignore it
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:

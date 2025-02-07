@@ -1,16 +1,16 @@
-// {"description":"Let you walk through walls", "usage":"N to toggle on/off", "var":1}
+// {"description":"Let you walk through walls", "usage":"N to toggle on/off", "var":["n"]}
+let keybind = "n"; // Change keybind here
+// The commented line above is for the auto installer ignore it
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:
 // * {"name":"Noclip","status":true,"description":"Add Noclip","parameters":{}}
 // *
-// * You can find a list of keycodes here: https://www.toptal.com/developers/keycode
-// * By default, the keybind is set to N. You can change it by modifying the keyCode variable.
+// * By default, the keybind is set to N. You can change it by modifying the key variable.
 //==============================
 
 
 Game_CharacterBase.prototype._noclip = false; // Add noclip variable
-let keyCode = 78; // Change keybind here
 
 const _yes_pass = Game_CharacterBase.prototype.canPass; // Save Original function
 Game_CharacterBase.prototype.canPass = function(x, y, d) { // Function to override the original
@@ -22,7 +22,7 @@ Game_CharacterBase.prototype.canPass = function(x, y, d) { // Function to overri
 }
 
 window.addEventListener("keydown", function(event) {  // Check if any key is pressed
-    if (event.keyCode === keyCode) {
+    if (event.key === keybind) {
         if ($gamePlayer._noclip) {
             $gameMessage.add('NoClip OFF'); // Comment / delete this to remove message
             $gamePlayer._noclip = false;

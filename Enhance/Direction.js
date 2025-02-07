@@ -1,4 +1,5 @@
-// {"description":"Let you change you're character direction", "usage":"ctrl + arrow keys", "var":0}
+// {"description":"Let you change you're character direction", "usage":"ctrl + arrow keys", "var":[]}
+// The line above is for the auto installer ignore it
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:
