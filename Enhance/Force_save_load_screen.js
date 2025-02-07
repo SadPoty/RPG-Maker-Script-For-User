@@ -1,4 +1,4 @@
-// {"description":"Force open the save or load screen", "usage":"I to open save screen, O to open load screen", "var":["F1", "F3"]}
+// {"description":"Force open the save or load screen", "usage":"I to open save screen, O to open load screen", "var":["i", "o"]}
 let keybind = ["i", "o"]; // Change keybind here
 // The commented line above is for the auto installer ignore it
 //==============================
