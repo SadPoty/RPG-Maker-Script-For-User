@@ -12,10 +12,10 @@ let keybind = ["i", "o"]; // Change keybind here
 
 
 window.addEventListener("keydown", function(event) {  // Check if any key is pressed
-    if (event.key === "i") {
+    if (event.key === keybind[0]) {
         SceneManager.push(Scene_Save);
     }
-    if (event.key === "o") {
+    if (event.key === keybind[1]) {
         SceneManager.push(Scene_Load);
     }
 });

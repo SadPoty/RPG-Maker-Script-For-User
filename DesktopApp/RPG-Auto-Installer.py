@@ -2,6 +2,7 @@ from customtkinter import *
 from CTkMessagebox import CTkMessagebox
 
 import os
+import time
 import requests
 import urllib.request
 import json
@@ -9,7 +10,7 @@ import json
 class InstallerApp(CTk):
     def __init__(self):
         super().__init__()
-        self.geometry("500x500")
+        self.geometry("600x500")
         set_appearance_mode("system")
         set_default_color_theme("dark-blue")
         self.title("RPG Auto Installer")
@@ -17,6 +18,8 @@ class InstallerApp(CTk):
         self.game_path = ""
         self.js_folder = ""
         self.plugins_js = ""
+        self.list_script_btn = []
+        self.list_frame = []
 
         self.left_menu = CTkFrame(self)
         self.left_menu.grid(row=0, column=0, sticky="news")
@@ -31,16 +34,50 @@ class InstallerApp(CTk):
         Retrieves the contents of specified directories from a GitHub repository.
         path should be Enhance/ or Cheat/
         """
+
         owner = "SadPoty"
         repo = "RPG-Maker-Script-For-User"
 
         url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
-        response = requests.get(url)
-        return response.json()
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            print(f"Error: {e}")
+            return []
+    
+    def getScriptData(self, path):
+        """
+        Retrieves the first line of a specified script.
+        path should be Enhance/x.js or Cheat/x.js
+        """
+        owner = "SadPoty"
+        repo = "RPG-Maker-Script-For-User"
+
+        url = f"https://api.github.com/repos/{owner}/{repo}/contents/{path}"
+        headers = {"Accept": "application/vnd.github.v3.raw"}
+
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            content = response.text.splitlines()
+
+            if content:
+                json_data = content[0][3:]
+                try:
+                    metadata = json.loads(json_data) 
+                    return metadata
+                except json.JSONDecodeError:
+                    return {"error": "JSON is invalid"}
+        return f"Error {response.status_code}: Can't get the script."
     
     def delete_contents_child(self):
         for widget in self.contents.winfo_children():
             widget.destroy()
+
+        self.list_frame = []
+        self.list_script_btn = []
+
         self.contents.rowconfigure(0, weight=0)
         self.contents.columnconfigure(0, weight=0)
         self.grid_columnconfigure(1, weight=0)
@@ -53,10 +90,10 @@ class InstallerApp(CTk):
         btn_menu = CTkButton(self.left_menu, text="Menu", command=self.create_widgets)
         btn_menu.grid(row=0, column=0, padx=10, pady=10)
 
-        btn_cheat = CTkButton(self.left_menu, text="Cheat", command=self.create_cheat_widgets)
+        btn_cheat = CTkButton(self.left_menu, text="Cheat", command=lambda:self.create_script_widgets("Cheat/"))
         btn_cheat.grid(row=1, column=0, padx=10, pady=10)
 
-        btn_Enhance = CTkButton(self.left_menu, text="Enhance", command=self.create_Enhance_widgets)
+        btn_Enhance = CTkButton(self.left_menu, text="Enhance", command=lambda:self.create_script_widgets("Enhance/"))
         btn_Enhance.grid(row=2, column=0, padx=10, pady=10)
 
         btn_settings = CTkButton(self.left_menu, text="Settings", command=self.create_settings_widgets)
@@ -71,36 +108,38 @@ class InstallerApp(CTk):
         btn_install = CTkButton(self.left_menu, text="Install", command=lambda:print("Install !"))
         btn_install.grid(row=5, column=0, padx=10, pady=10, sticky="s")
 
-    def create_Enhance_widgets(self):
+    def create_script_widgets(self, path):
         """
         Creates the widgets for the GUI.
         """
         self.delete_contents_child()
-
-        list_buttons = []
         i = 0
 
-        script = self.getGitHubContents("Enhance/")
+        frame = CTkFrame(self.contents)
+        frame.grid(row=0, column=0, padx=10, pady=10, sticky="news")
+        self.contents.rowconfigure(0, weight=1)
+        self.contents.columnconfigure(0, weight=1)
+
+        script = self.getGitHubContents(path)
         for script in script:
-            btn = CTkButton(self.contents, text=script["name"], command=lambda s=script:print(f"Install {s['name']}"))
-            btn.grid(row=i, column=0, padx=10, pady=3, sticky="ew")
-            list_buttons.append(btn)
-            i += 1
+            data = self.getScriptData(script["path"])
 
-    def create_cheat_widgets(self):
-        """
-        Creates the widgets for the GUI.
-        """
-        self.delete_contents_child()
+            frame = CTkFrame(self.contents)
+            frame.grid(row=i, column=0, padx=10, pady=10, sticky="news")
+            self.list_frame.append(frame)
 
-        list_buttons = []
-        i = 0
+            btn = CTkButton(frame, text=script["name"], command=lambda event=script, frame=frame:self.install_script(event, [var.get() for var in frame.winfo_children() if isinstance(var, CTkEntry)]))
+            
+            btn.grid(row=0, column=0, padx=10, pady=3, sticky="ew")
+            self.list_script_btn.append(btn)
 
-        script = self.getGitHubContents("Cheat/")
-        for script in script:
-            btn = CTkButton(self.contents, text=script["name"], command=lambda event=script:self.install_script(event))
-            btn.grid(row=i, column=0, padx=10, pady=3, sticky="ew")
-            list_buttons.append(btn)
+            description = CTkLabel(frame, text=data["description"])
+            description.grid(row=0, column=1, padx=10, pady=3, sticky="ew")
+
+            for j in range(len(data["var"])):
+                var = CTkEntry(frame, placeholder_text=data["var"][j])
+                var.grid(row=1, column=j, padx=10, pady=3, sticky="ew")
+
             i += 1
 
     def create_settings_widgets(self):
@@ -139,7 +178,7 @@ class InstallerApp(CTk):
         """
         Creates the widgets for the GUI.
         """
-        print(self.game_path)
+        self.delete_contents_child()
         self.contents.rowconfigure(0, weight=1)
         self.contents.columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -147,15 +186,40 @@ class InstallerApp(CTk):
         btn = CTkButton(self.contents, text="Choose game.exe directory", command=self.find_dir, height=50)
         btn.grid(row=0, column=0, padx=10, sticky="ew")
 
-    def install_script(self, script):
+    def install_script(self, script, keybind=[]):
+        if self.game_path == "":
+            CTkMessagebox(title="Error", message="Please select a game folder first.")
+            return
+
         dl_link = script['download_url']
-        urllib.request.urlretrieve(dl_link, self.js_folder+"\\plugins"+"\\"+script['name']) # download file to the js folder
+        def wait_for_download():
+            while not os.path.exists(os.path.join(self.js_folder, "plugins", script['name'])):
+                time.sleep(0.1)
+
+        urllib.request.urlretrieve(dl_link, os.path.join(self.js_folder, "plugins", script['name'])) # download file to the js folder
+        js_file = os.path.join(self.js_folder, "plugins", script['name'])
+
+        wait_for_download()
+        CTkMessagebox(title="Success", message="Script installed successfully !")
+
+        # change the keybind
+        if keybind != []:
+            with open(js_file, 'r') as file:
+                lines = file.readlines()
+
+            for i, line in enumerate(lines):
+                if line.strip().startswith('let keybind ='):
+                    lines[i] = f"let keybind = {json.dumps(keybind)}; // Change keybind here\n"
+                    break
+
+            with open(js_file, 'w') as file:
+                file.writelines(lines)
 
         # add the script to the plugins.js
         new_plugin = {
             "name": script['name'],
             "status": True,
-            "description": "Idk how I could retrive the description for now",
+            "description": "",
             "parameters": {}
         }
 
