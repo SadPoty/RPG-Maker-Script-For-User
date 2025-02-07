@@ -1,3 +1,4 @@
+// {"description":"Let you change you're character direction", "usage":"ctrl + arrow keys", "var":0}
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:
@@ -23,3 +24,5 @@ window.addEventListener("keydown", function(event) {
      }
     }
 })
+
+

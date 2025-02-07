@@ -1,3 +1,4 @@
+// {"description":"Let you walk through walls", "usage":"N to toggle on/off", "var":1}
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:

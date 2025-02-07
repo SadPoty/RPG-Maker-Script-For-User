@@ -1,3 +1,4 @@
+// {"description":"Force open the save or load screen", "usage":"I to open save screen, O to open load screen", "var":2}
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:

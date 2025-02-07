@@ -1,3 +1,4 @@
+// {"description":"Let you quickly save and load", "usage":"F1 to save, F3 to load", "var":2}
 //==============================
 // * Put this code in a new file in the js/plugins directory
 // * Add the following to the list of plugins in js/plugins.js:
