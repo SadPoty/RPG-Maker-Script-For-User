@@ -160,7 +160,7 @@ class InstallerApp(CTk):
 
             frame = CTkFrame(self.contents)
             frame.grid(row=i, column=0, padx=10, pady=10, sticky="news")
-            self.list_frame.append(frame)
+            # self.list_frame.append(frame)
 
             btn = CTkButton(frame, text=script["name"], border_color="red", border_width=1)
             btn.configure(command=lambda event=script, frame_ref=frame, btn_ref=btn:
@@ -169,14 +169,24 @@ class InstallerApp(CTk):
                             )
             
             btn.grid(row=0, column=0, padx=10, pady=3, sticky="ew")
-            self.list_script_btn.append(btn)
+            # self.list_script_btn.append(btn)
 
             description = CTkLabel(frame, text=data["description"])
             description.grid(row=0, column=1, padx=10, pady=3, sticky="ew")
 
-            for j in range(len(data["var"])):
-                var = CTkEntry(frame, placeholder_text=data["var"][j])
-                var.grid(row=1, column=j, padx=10, pady=3, sticky="ew")
+            if self.list_ToInstall != []:
+                for src, keybind in self.list_ToInstall:
+                    if src["name"] == script["name"]:
+                        btn.configure(border_color="green", border_width=1)
+                        for j in range(len(data["var"])):
+                            var = CTkEntry(frame, placeholder_text=keybind[j])
+                            var.grid(row=1, column=j, padx=10, pady=3, sticky="ew")
+            else:
+                for j in range(len(data["var"])):
+                    var = CTkEntry(frame, placeholder_text=data["var"][j])
+                    var.grid(row=1, column=j, padx=10, pady=3, sticky="ew")
+
+
 
             i += 1
 
@@ -251,7 +261,6 @@ class InstallerApp(CTk):
         btn.grid(row=0, column=0, padx=10, sticky="ew")
 
     def AddToList(self, script, btn, keybind=[]):
-        print(keybind)
         if btn.cget("border_color") == "green":
             self.list_ToInstall.remove((script, keybind))
             btn.configure(border_color="red", border_width=1)
